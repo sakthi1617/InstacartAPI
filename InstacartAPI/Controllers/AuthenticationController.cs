@@ -2,21 +2,22 @@
 
 namespace InstacartAPI.Controllers
 {
-    public class AuthenticationController : Controller
+    public class AuthenticationController : ControllerBase
     {
         public IActionResult Index()
         {
-            return View();
+            return Ok();
         }
         public IActionResult Login()
         {
-            return View();
+            return Ok();
         }
 
         public IActionResult Logout()
 
         {
-            return View();
+            return Ok();
         }
     }
 }
+
