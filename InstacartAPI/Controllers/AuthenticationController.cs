@@ -12,5 +12,9 @@ namespace InstacartAPI.Controllers
         {
             return View();
         }
+        public IActionResult Logout()
+        {
+            return View();
+        }
     }
 }
