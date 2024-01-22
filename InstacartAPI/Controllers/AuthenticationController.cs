@@ -14,7 +14,6 @@ namespace InstacartAPI.Controllers
         }
 
         public IActionResult Logout()
-
         {
             return Ok();
         }
