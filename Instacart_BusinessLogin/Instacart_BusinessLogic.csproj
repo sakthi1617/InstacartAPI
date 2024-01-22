@@ -10,4 +10,9 @@
     <ProjectReference Include="..\Instacart_DataAccess\Instacart_DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="BusinessLogics\" />
+    <Folder Include="IBusinessLogics\" />
+  </ItemGroup>
+
 </Project>
