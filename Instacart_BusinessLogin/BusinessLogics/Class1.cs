@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Instacart_DataAccess.DBContext
+namespace Instacart_BusinessLogic.BusinessLogics
 {
-    internal class InstaContext
+    internal class Class1
     {
     }
 }
