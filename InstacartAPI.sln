@@ -5,6 +5,10 @@ VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstacartAPI", "InstacartAPI\InstacartAPI.csproj", "{3C2EA683-E1C0-452B-AB1B-5325A237F527}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Instacart_BusinessLogic", "Instacart_BusinessLogin\Instacart_BusinessLogic.csproj", "{356419C4-5CFC-412F-96DF-FC16ADD3DEB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Instacart_DataAccess", "Instacart_DataAccess\Instacart_DataAccess.csproj", "{7EBDD30C-F848-4128-8FD6-7C1616D9FBFA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{3C2EA683-E1C0-452B-AB1B-5325A237F527}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C2EA683-E1C0-452B-AB1B-5325A237F527}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C2EA683-E1C0-452B-AB1B-5325A237F527}.Release|Any CPU.Build.0 = Release|Any CPU
+		{356419C4-5CFC-412F-96DF-FC16ADD3DEB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{356419C4-5CFC-412F-96DF-FC16ADD3DEB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{356419C4-5CFC-412F-96DF-FC16ADD3DEB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{356419C4-5CFC-412F-96DF-FC16ADD3DEB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EBDD30C-F848-4128-8FD6-7C1616D9FBFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EBDD30C-F848-4128-8FD6-7C1616D9FBFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EBDD30C-F848-4128-8FD6-7C1616D9FBFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EBDD30C-F848-4128-8FD6-7C1616D9FBFA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
