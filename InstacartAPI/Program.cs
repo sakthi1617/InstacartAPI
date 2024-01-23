@@ -14,7 +14,9 @@ builder.Services.AddTransient<DB_context>();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddTransient<IAdminBusinessLogic, AdminBusinessLogic>();
+builder.Services.AddTransient<IPasswordservice,PasswordService>();
 builder.Services.AddTransient<IAdminService, AdminService>();
+builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<IAuthservice, AuthServices>();
 builder.Services.AddTransient<IAuthBLL, AuthBLL>();
 
