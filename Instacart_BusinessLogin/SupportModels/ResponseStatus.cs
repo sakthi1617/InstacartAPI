@@ -1,4 +1,4 @@
-﻿namespace Instacart_BusinessLogin
+﻿namespace Instacart_BusinessLogic.SupportModels
 {
     public class ResponseStatus<T>
     {
