@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace InstacartAPI.Controllers
 {
+    [Route("api/[controller]")]
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthBLL _auth;
