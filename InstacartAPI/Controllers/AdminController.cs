@@ -16,6 +16,7 @@ namespace InstacartAPI.Controllers
         }
 
         [HttpPost]
+        [Route("AdminLogin")]
         public async Task<IActionResult> AdminLogin(string username , string password)
         {
             if(ModelState.IsValid)
@@ -26,6 +27,7 @@ namespace InstacartAPI.Controllers
             return BadRequest();
         }
         [HttpPost]
+        [Route("AddShop")]
         public async Task<IActionResult> AddShop(AddShopVM model)
         {
             if(ModelState.IsValid)
