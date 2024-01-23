@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Instacart_BusinessLogic.SupportModels
 {
-    public class AuthendicateResult
+    public class TokenModel
     {
         public string Token { get; set; }
 
         public string RefreshToken { get; set; }
     }
-    public class AuthendicateResult : AuthendicateResult
+    public class AuthendicateResult : TokenModel
     {
         public bool Success { get; set; }
 
