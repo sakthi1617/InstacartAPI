@@ -1,4 +1,5 @@
 ﻿using Instacart_BusinessLogic.IBusinessLogics;
+using Instacart_BusinessLogic.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,8 +20,20 @@ namespace InstacartAPI.Controllers
         {
             if(ModelState.IsValid)
             {
-
+                var result = await _adminbll.AdminLogin(username, password);
+                return Ok(result);
             }
+            return BadRequest();
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddShop(AddShopVM model)
+        {
+            if(ModelState.IsValid)
+            {
+                var result = await _adminbll.AddShop(model);
+                return Ok(result);
+            }
+            return BadRequest();
         }
     }
 }
