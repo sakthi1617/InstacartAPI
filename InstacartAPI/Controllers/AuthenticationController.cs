@@ -1,21 +1,40 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Instacart_BusinessLogic.IBusinessLogics;
+using Instacart_DataAccess.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Runtime.CompilerServices;
 
 namespace InstacartAPI.Controllers
 {
     public class AuthenticationController : ControllerBase
     {
-        public IActionResult Index()
+        private readonly IAuthBLL _auth;
+        public AuthenticationController(IAuthBLL auth)
         {
-            return Ok();
-        }
-        public IActionResult Login()
-        {
-            return Ok();
+            _auth = auth;   
         }
 
-        public IActionResult Logout()
+        [HttpPost]
+        [Route("UserRegistration")]
+        public async Task<IActionResult> UserRegister(UserRegisterModel model)
         {
-            return Ok();
+           if(ModelState.IsValid)
+            {
+                var result = await _auth.userRegister(model);
+                return Ok(result);
+            }
+           return BadRequest(); 
+        }
+
+        [HttpPost]
+        [Route("UserLogin")]
+        public async Task<IActionResult> UserLogin(string Email, string password)
+        {
+            if(ModelState.IsValid)
+            {
+                var result = await _auth.UserLogin(Email, password);
+                return Ok(result);
+            }
+            return BadRequest();
         }
     }
 }
