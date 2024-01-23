@@ -17,6 +17,6 @@ namespace Instacart_DataAccess.Data
             _configuration= configuration;
             _connectionstring = _configuration.GetConnectionString("DefaultConnection");
         }
-        public SqlConnection Createconnection => new SqlConnection(_connectionstring);
+        public SqlConnection Createconnection() => new SqlConnection(_connectionstring);
     }
 }
