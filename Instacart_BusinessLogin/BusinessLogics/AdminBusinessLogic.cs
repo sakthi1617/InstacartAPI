@@ -10,9 +10,9 @@ namespace Instacart_BusinessLogic.BusinessLogics
 {
     public class AdminBusinessLogic : IAdminBusinessLogic
     {
-        public Task<ResponseStatus<TokenModel>> AdminLogin(string username, string password)
+        public Task<ResponseStatus<AuthendicateResult>> AdminLogin(string username, string password)
         {
-            throw new NotImplementedException();
+           
         }
     }
 }

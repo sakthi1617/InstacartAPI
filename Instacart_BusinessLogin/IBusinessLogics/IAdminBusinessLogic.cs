@@ -9,6 +9,6 @@ namespace Instacart_BusinessLogic.IBusinessLogics
 {
     public interface IAdminBusinessLogic
     {
-        public Task<ResponseStatus<TokenModel>> AdminLogin(string username, string password);
+        public Task<ResponseStatus<AuthendicateResult>> AdminLogin(string username, string password);
     }
 }
