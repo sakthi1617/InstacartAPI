@@ -9,8 +9,8 @@ namespace InstacartAPI.Controllers
     [ApiController]
     public class AdminController : ControllerBase
     {
-        private readonly IAdminBusinessLogic _adminbll;
-        public AdminController(IAdminBusinessLogic adminBusinessLogic)
+        private readonly IAdminBLL _adminbll;
+        public AdminController(IAdminBLL adminBusinessLogic)
         {
             _adminbll = adminBusinessLogic;
         }
@@ -28,7 +28,7 @@ namespace InstacartAPI.Controllers
         }
         [HttpPost]
         [Route("AddShop")]
-        public async Task<IActionResult> AddShop(AddShopVM model)
+        public async Task<IActionResult> AddShop([FromQuery]AddShopVM model)
         {
             if(ModelState.IsValid)
             {

@@ -12,12 +12,14 @@ using System.Threading.Tasks;
 
 namespace Instacart_BusinessLogic.BusinessLogics
 {
-    public class AdminBusinessLogic : IAdminBusinessLogic
+    public class AdminBLL : IAdminBLL
     {
         private readonly IAdminService _adminservice;
-        public AdminBusinessLogic(IAdminService adminService)
+        private readonly IPasswordservice _passwordservice;
+        public AdminBLL(IAdminService adminService, IPasswordservice passwordservice)
         {
             _adminservice = adminService;
+            _passwordservice = passwordservice;
         }
         public async Task<ResponseStatus<TokenModel>> AdminLogin(string username, string password)
         {
@@ -59,19 +61,39 @@ namespace Instacart_BusinessLogic.BusinessLogics
             shop.ShopName = model.ShopName;
             shop.Location = model.Location;
             shop.UserName = model.UserName;
-            //shop.PasswordHash = ;
-            //shop.PasswordSalt = ;
+            _passwordservice.PasswordHash(model.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            shop.PasswordHash = passwordHash;
+            shop.PasswordSalt = passwordSalt;
             if (model.ShopImage != null && model.ShopImage.Length > 0)
             {
                 using (var memoryStream = new MemoryStream())
                 {
                     model.ShopImage.CopyTo(memoryStream);
-                    shop.ShopImage = memoryStream.ToArray();                    
+                    shop.ShopImage = memoryStream.ToArray();
                 }
             }
             shop.DeliveryOptionID = model.DeliveryOption;
             shop.ShopCategoryID = model.shopCategory;
             var data = _adminservice.AddShop(shop);
+            switch (data)
+            {
+                case 0:
+                    response.Status = false;
+                    response.StatusCode = StatusCodes.Status400BadRequest;
+                    response.Message = "UserName Already Exist";
+                    break;
+                case 1:
+                    response.Status = true;
+                    response.StatusCode = StatusCodes.Status200OK;
+                    response.Message = "Shop Added Successfully";
+                    response.Data = model;
+                    break;
+                case -1:
+                    response.Status = false;
+                    response.StatusCode = StatusCodes.Status400BadRequest;
+                    response.Message = "Somthing went wrong please try again later...";
+                    break;
+            }
             return response;
         }
     }
