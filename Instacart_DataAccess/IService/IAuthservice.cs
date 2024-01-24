@@ -14,6 +14,12 @@ namespace Instacart_DataAccess.IService
         public int UserLogin(string Email, string password);
         public Userdetails GetUserDetails(string Email);
 
+        public int sendOtpforuser(string Email);
+
         public int setToken(RefreshtokenModel model);
+
+       public int validateOTP(string Email, string OTP);
+
+        public int Updatepassword(string Email, string password);
     }
 }

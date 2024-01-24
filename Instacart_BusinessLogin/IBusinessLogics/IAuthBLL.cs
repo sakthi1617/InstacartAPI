@@ -12,5 +12,10 @@ namespace Instacart_BusinessLogic.IBusinessLogics
     {
         public  Task<ResponseStatus<UserRegisterModel>> userRegister(UserRegisterModel userRegister);
         public  Task<ResponseStatus<TokenModel>> UserLogin(string username, string password);
+
+        public Task<ResponseStatus<string>> Forgetpassword(string username);
+        public Task<ResponseStatus<string>> ValidateOTP(string Email, string OTP);
+
+        public Task<ResponseStatus<string>> UpdatePassword(string Email, string password);
     }
 }

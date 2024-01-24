@@ -12,6 +12,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.WebRequestMethods;
 
 namespace Instacart_BusinessLogic.BusinessLogics
 {
@@ -78,6 +79,35 @@ namespace Instacart_BusinessLogic.BusinessLogics
             return response;
         }
 
+        public async Task<ResponseStatus<string>> Forgetpassword(string username)
+        {
+            ResponseStatus<string> response = new ResponseStatus<string>();
+            var data = _authservice.sendOtpforuser(username);
+            switch(data) { 
+                case 0:
+                    response.Status= false;
+                    response.StatusCode= StatusCodes.Status400BadRequest;
+                    response.Message = "Otp send failed... Please try again";
+                    break;
+                    case 1:
+                    response.Status = true;
+                    response.StatusCode = StatusCodes.Status200OK;
+                    response.Message = "Otp sended successfully";
+                    break;
+                    case -1:
+                    response.Status = false;
+                    response.StatusCode = StatusCodes.Status400BadRequest;
+                    response.Message = "Invalid username";
+                    break;
+                    case -2:
+                    response.Status = false;
+                    response.StatusCode = StatusCodes.Status400BadRequest;
+                    response.Message = "Username is empty";
+                    break;
+            }
+            return response;
+        }
+
         public async Task<AuthendicateResult> Authenticateuser(string username)
         {
             var getuserDetails = _authservice.GetUserDetails(username);
@@ -115,6 +145,44 @@ namespace Instacart_BusinessLogic.BusinessLogics
             authendicate.RefreshToken = refreshtoken.RefToken;
             _authservice.setToken(refreshtoken);
             return authendicate;
+        }
+
+        public async Task<ResponseStatus<string>> ValidateOTP(string Email, string OTP)
+        {
+            ResponseStatus<string> response = new ResponseStatus<string>();
+            var data = _authservice.validateOTP(Email, OTP);
+            if (data == 1)
+            {
+                response.Status = true;
+                response.StatusCode = StatusCodes.Status200OK;
+                response.Message = "Valid OTP";
+            }
+            else
+            {
+                response.Status = false;
+                response.StatusCode = StatusCodes.Status400BadRequest;
+                response.Message = "InValid OTP";
+            }
+            return response;
+        }
+
+        public async Task<ResponseStatus<string>> UpdatePassword(string Email, string password)
+        {
+            ResponseStatus<string> response = new ResponseStatus<string>();
+            var data = _authservice.Updatepassword(Email, password);
+            if (data == 1)
+            {
+                response.Status = true;
+                response.StatusCode = StatusCodes.Status200OK;
+                response.Message = "Password updated successfully";
+            }
+            else
+            {
+                response.Status = false;
+                response.StatusCode = StatusCodes.Status400BadRequest;
+                response.Message = "Password updated not completely...some thing went wrong";
+            }
+            return response;
         }
     }
 }
