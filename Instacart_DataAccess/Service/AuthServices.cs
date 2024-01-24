@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,10 +18,12 @@ namespace Instacart_DataAccess.Service
     {
         private readonly DB_context _context;
         private readonly IPasswordservice _passwordservice;
-        public AuthServices(DB_context context, IPasswordservice passwordservice) 
+        private readonly EmailServices _emailservice;
+        public AuthServices(DB_context context, IPasswordservice passwordservice, EmailServices emailservice) 
         {
             _context= context;
             _passwordservice= passwordservice;
+            _emailservice= emailservice;
         }
 
         public int UserLogin(string Email, string password)
@@ -116,5 +119,78 @@ namespace Instacart_DataAccess.Service
                
             }
         }
+
+        public int sendOtpforuser(string Email)
+        {
+            if(Email!=null)
+            {
+                var checkvalidmail = GetUserDetails(Email); 
+                if (checkvalidmail != null)
+                {
+                    string OTP = GenerateOTP();
+                    using (var connection = _context.Createconnection())
+                    {
+                        DynamicParameters parameters = new DynamicParameters();
+                        parameters.Add("@username", Email);
+                        parameters.Add("@otp", OTP);
+                        parameters.Add("@isActive", true);
+                        parameters.Add("@isTimeout", false);
+                        parameters.Add("@isExpired", false);
+                        parameters.Add("@Createdon", DateTime.UtcNow);
+                        parameters.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                        connection.Execute("SP_Setotp", parameters, commandType: CommandType.StoredProcedure);
+                        int result = parameters.Get<int>("@Result");
+                        // Send otp to user email
+                        var sendedMessage = "Your One Time password(OTP) is" + OTP + ". Your otp is valid for 2 minutes";
+                        var message = new Message(new string[] { Email }, "OTP Verification", sendedMessage.ToString(), null);
+                        _emailservice.sendEmail(message);
+                        return result;
+                    }
+                }
+                return 0;
+            }
+            return -1;
+        }
+
+        public int Updatepassword(string Email, string password)
+        {
+            using(var connection = _context.Createconnection())
+            {
+                _passwordservice.PasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
+
+                DynamicParameters parameters = new DynamicParameters();
+                parameters.Add("@Username", Email);
+                parameters.Add("@PasswordHash", passwordHash);
+                parameters.Add("@PasswordSalt", passwordSalt);
+                parameters.Add("@Result",dbType: DbType.Int32, direction: ParameterDirection.Output);
+                connection.Execute("SP_UpdatePassword", parameters, commandType: CommandType.StoredProcedure);
+                int result = parameters.Get<int>("@Result");
+                return result;
+            }
+        }
+
+
+        public string GenerateOTP()
+        {
+            Random random = new Random();
+            string otp = random.Next(0, 1000000).ToString();
+            return otp;
+        }
+
+        public int validateOTP(string Email, string OTP)
+        {
+            using (var connection = _context.Createconnection())
+            {
+                DynamicParameters parameters = new DynamicParameters();
+                parameters.Add("@Username", Email);
+                parameters.Add("@OTP", OTP);
+                parameters.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                connection.Execute("SP_ValidateOTP", parameters, commandType: CommandType.StoredProcedure);
+                int result = parameters.Get<int>("@Result");
+                return result;
+
+            }
+        }
     }
+
 }
