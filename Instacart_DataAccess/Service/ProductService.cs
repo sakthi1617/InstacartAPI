@@ -1,4 +1,5 @@
-﻿using Instacart_DataAccess.Data;
+﻿using Dapper;
+using Instacart_DataAccess.Data;
 using Instacart_DataAccess.IService;
 using Instacart_DataAccess.Models;
 using System;
@@ -62,13 +63,13 @@ namespace Instacart_DataAccess.Service
                     }
                     catch(Exception ex) 
                     {
-                        throw;
+                        throw ex;
                     }
                 }
             }
         }
 
-        public int UpdateProduct(int id, Product product)
+        public int UpdateProduct(Guid id, Product product)
         {
             using (var connection = _Context.Createconnection())
             {
@@ -110,7 +111,7 @@ namespace Instacart_DataAccess.Service
                     }
                     catch (Exception ex)
                     {
-                        throw;
+                        throw ex;
                     }
                 }
             }
@@ -127,60 +128,69 @@ namespace Instacart_DataAccess.Service
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@ProductID", productId);
 
+                        SqlParameter outputParameter = new SqlParameter("@Response", SqlDbType.Int)
+                        {
+                            Direction = ParameterDirection.Output
+                        };
+                        command.Parameters.Add(outputParameter);
+
                         connection.Open();
 
                         int rowsAffected = command.ExecuteNonQuery();
+
+                        int response =(int)outputParameter.Value;
 
                         return rowsAffected; 
                     }
                     catch (Exception ex)
                     {
-                        throw;
+                        throw ex;
                     }
+                }
+            }
+        }        
+
+        public List<Product> GetProductByID(Guid productId)
+        {
+            using (var connection = _Context.Createconnection())
+            {
+                try
+                {
+                    connection.Open();
+                    
+                    var parameters = new DynamicParameters();
+                    parameters.Add("@ProductID", productId, DbType.Guid, ParameterDirection.Input);                    
+                    parameters.Add("@Response", dbType: DbType.Int32, direction: ParameterDirection.Output);   
+                    
+                    var result = connection.Query<Product>("GetProductByID", parameters, commandType: CommandType.StoredProcedure).ToList();                   
+                    int response = parameters.Get<int>("@Response");                    
+
+                    return result;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
                 }
             }
         }
 
-        //public int GetProductByID(Guid productId)
-        //{
-        //    using (var connection = _Context.Createconnection())
-        //    {
-        //        using (SqlCommand command = new SqlCommand("GetProductByID", connection))
-        //        {
-        //            try
-        //            {
-        //                connection.Open();
-        //                // Use Dapper to execute the stored procedure with parameter binding
-        //                var result = connection.Query<Product>("GetProductByID", new { ProductID = productId }, commandType: CommandType.StoredProcedure).ToList();
+        public List<Product> GetAllProducts()
+        {
+            using (var connection = _Context.Createconnection())
+            {
+                try
+                {
+                    connection.Open();
 
-        //                return result;
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //    }
-        //}
+                    var productList = connection.Query<Product>("GetProducts", commandType: CommandType.StoredProcedure).ToList();
 
-        //public List<Product> GetProductList()
-        //{
-        //    using (var connection = _Context.Createconnection())
-        //    {
-        //        try
-        //        {
-        //            connection.Open();
-
-        //            // Use Dapper to execute the stored procedure
-        //            var productList = connection.Query<Product>("GetProducts", commandType: CommandType.StoredProcedure).ToList();
-
-        //            return productList;
-        //        }
-        //        catch(Exception ex)
-        //        {
-        //            throw;
-        //        }
-        //    }
-        //}
+                    return productList;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+        }
     }
 }

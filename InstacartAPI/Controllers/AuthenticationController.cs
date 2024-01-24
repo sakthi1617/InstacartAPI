@@ -37,6 +37,42 @@ namespace InstacartAPI.Controllers
             }
             return BadRequest();
         }
+
+        [HttpPost]
+        [Route("Forgetpassword")]
+        public async Task<IActionResult> Forgetpassword(string Email)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _auth.Forgetpassword(Email);
+                return Ok(result);
+            }
+            return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("ValidateOTP")]
+        public async Task<IActionResult> ValidateOTP(string Email, string Otp)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _auth.ValidateOTP(Email, Otp);
+                return Ok(result);
+            }
+            return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("UpdatePassword")]
+        public async Task<IActionResult> UpdatePassword(string Email, string password)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _auth.UpdatePassword(Email, password);
+                return Ok(result);
+            }
+            return BadRequest();
+        }
     }
 }
 
