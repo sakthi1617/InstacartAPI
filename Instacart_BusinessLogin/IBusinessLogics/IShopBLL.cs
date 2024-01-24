@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Instacart_BusinessLogic.IBusinessLogics
 {
-    public interface IAdminBusinessLogic
+    public interface IShopBLL
     {
-        public Task<ResponseStatus<TokenModel>> AdminLogin(string username, string password);
-        public Task<ResponseStatus<AddShopVM>> AddShop(AddShopVM model);
+        public Task<ResponseStatus<TokenModel>> ShopLogin(string username, string password);
+        public Task<ResponseStatus<UpdateShopVM>> UpdateShopDetails(UpdateShopVM model);
     }
 }
