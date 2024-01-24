@@ -16,13 +16,16 @@ builder.Services.AddTransient<Instacart_DataAccess.Service.EmailServices>();
 var emailconfig = builder.Configuration.GetSection("EmailConfiguration").Get<EmailModel>();
 builder.Services.AddSingleton(emailconfig);
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddTransient<IAdminBusinessLogic, AdminBusinessLogic>();
+builder.Services.AddTransient<IAdminBLL, AdminBLL>();
 builder.Services.AddTransient<IPasswordservice,PasswordService>();
 builder.Services.AddTransient<IAdminService, AdminService>();
 builder.Services.AddTransient<IEmailServices, EmailServices>();
 builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<IProductBLL, ProductBLL>();
 builder.Services.AddTransient<IAuthservice, AuthServices>();
 builder.Services.AddTransient<IAuthBLL, AuthBLL>();
+builder.Services.AddTransient<IShopBLL, ShopBLL>();
+builder.Services.AddTransient<IShopService, ShopService>();
 builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
