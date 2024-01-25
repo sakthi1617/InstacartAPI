@@ -1,4 +1,5 @@
 ﻿using Instacart_BusinessLogic.IBusinessLogics;
+using Instacart_BusinessLogic.SupportModels;
 using Instacart_BusinessLogic.ViewModels;
 using Instacart_DataAccess.IService;
 using Microsoft.AspNetCore.Http;
@@ -21,24 +22,50 @@ namespace InstacartAPI.Controllers
         [Route("ShopLogin")]
         public async Task<IActionResult> ShopLogin(string username, string password)
         {
-            if(ModelState.IsValid)
+            try
             {
-               var result = await _merchantBLL.ShopLogin(username, password);
-                return Ok(result);
+                if (ModelState.IsValid)
+                {
+                    var result = await _merchantBLL.ShopLogin(username, password);
+                    return Ok(result);
+                }
+                return BadRequest(ModelState);
             }
-            return BadRequest(ModelState);
+            catch (Exception ex)
+            {
+                ApiLog.Log("LogFile", ex.Message, ex.StackTrace, 10);
+                return BadRequest(new FailureResponse<object>
+                {
+                    Error = ex.Message,
+                    IsreponseSuccess = false
+                });
+            }          
+           
         }
 
         [HttpPut]
         [Route("UpdateShopDetails")]
         public async Task<IActionResult> UpdateShopDetails([FromQuery]UpdateShopVM model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var result =await _merchantBLL.UpdateShopDetails(model);
-                return Ok(result);
+                if (ModelState.IsValid)
+                {
+                    var result = await _merchantBLL.UpdateShopDetails(model);
+                    return Ok(result);
+                }
+                return BadRequest(ModelState);
             }
-            return BadRequest(ModelState);
+            catch (Exception ex)
+            {
+                ApiLog.Log("LogFile", ex.Message, ex.StackTrace, 10);
+                return BadRequest(new FailureResponse<object>
+                {
+                    Error = ex.Message,
+                    IsreponseSuccess = false
+                });
+            }
+           
         }
     }
 }
