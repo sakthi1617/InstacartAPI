@@ -12,5 +12,7 @@ namespace Instacart_BusinessLogic.IBusinessLogics
     {
         public Task<ResponseStatus<TokenModel>> AdminLogin(string username, string password);
         public Task<ResponseStatus<AddShopVM>> AddShop(AddShopVM model);
+        public Task<ResponseStatus<Guid>> RemoveShop(Guid ShopId);
+        public Task<ResponseStatus<Guid>> DeactiveShop(Guid ShopId,bool IsActive);
     }
 }
