@@ -1,4 +1,5 @@
 ﻿using Instacart_BusinessLogic.IBusinessLogics;
+using Instacart_BusinessLogic.SupportModels;
 using Instacart_DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.CompilerServices;
@@ -18,60 +19,120 @@ namespace InstacartAPI.Controllers
         [Route("UserRegistration")]
         public async Task<IActionResult> UserRegister(UserRegisterModel model)
         {
-           if(ModelState.IsValid)
+            try
             {
-                var result = await _auth.userRegister(model);
-                return Ok(result);
+                if (ModelState.IsValid)
+                {
+                    var result = await _auth.userRegister(model);
+                    return Ok(result);
+                }
+                return BadRequest(ModelState);
             }
-           return BadRequest(); 
+            catch (Exception ex)
+            {
+                ApiLog.Log("LogFile", ex.Message, ex.StackTrace, 10);
+                return BadRequest(new FailureResponse<object>
+                {
+                    Error = ex.Message,
+                    IsreponseSuccess = false
+                });
+            }
         }
 
         [HttpPost]
         [Route("UserLogin")]
         public async Task<IActionResult> UserLogin(string Email, string password)
         {
-            if(ModelState.IsValid)
+            try
             {
-                var result = await _auth.UserLogin(Email, password);
-                return Ok(result);
+                if (ModelState.IsValid)
+                {
+                    var result = await _auth.UserLogin(Email, password);
+                    return Ok(result);
+                }
+                return BadRequest(ModelState);
             }
-            return BadRequest();
+            catch (Exception ex)
+            {
+                ApiLog.Log("LogFile", ex.Message, ex.StackTrace, 10);
+                return BadRequest(new FailureResponse<object>
+                {
+                    Error = ex.Message,
+                    IsreponseSuccess = false
+                });
+            }
         }
 
         [HttpPost]
         [Route("Forgetpassword")]
         public async Task<IActionResult> Forgetpassword(string Email)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var result = await _auth.Forgetpassword(Email);
-                return Ok(result);
+                if (ModelState.IsValid)
+                {
+                    var result = await _auth.Forgetpassword(Email);
+                    return Ok(result);
+                }
+                return BadRequest(ModelState);
             }
-            return BadRequest();
+            catch (Exception ex)
+            {
+                ApiLog.Log("LogFile", ex.Message, ex.StackTrace, 10);
+                return BadRequest(new FailureResponse<object>
+                {
+                    Error = ex.Message,
+                    IsreponseSuccess = false
+                });
+            }
         }
 
         [HttpPost]
         [Route("ValidateOTP")]
         public async Task<IActionResult> ValidateOTP(string Email, string Otp)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var result = await _auth.ValidateOTP(Email, Otp);
-                return Ok(result);
+                if (ModelState.IsValid)
+                {
+                    var result = await _auth.ValidateOTP(Email, Otp);
+                    return Ok(result);
+                }
+                return BadRequest(ModelState);
             }
-            return BadRequest();
+            catch (Exception ex)
+            {
+                ApiLog.Log("LogFile", ex.Message, ex.StackTrace, 10);
+                return BadRequest(new FailureResponse<object>
+                {
+                    Error = ex.Message,
+                    IsreponseSuccess = false
+                });
+            }
         }
 
         [HttpPost]
         [Route("UpdatePassword")]
         public async Task<IActionResult> UpdatePassword(string Email, string password)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var result = await _auth.UpdatePassword(Email, password);
-                return Ok(result);
+                if (ModelState.IsValid)
+                {
+                    var result = await _auth.UpdatePassword(Email, password);
+                    return Ok(result);
+                }
+                return BadRequest(ModelState);
             }
-            return BadRequest();
+            catch (Exception ex)
+            {
+                ApiLog.Log("LogFile", ex.Message, ex.StackTrace, 10);
+                return BadRequest(new FailureResponse<object>
+                {
+                    Error = ex.Message,
+                    IsreponseSuccess = false
+                });
+            }
         }
     }
 }
