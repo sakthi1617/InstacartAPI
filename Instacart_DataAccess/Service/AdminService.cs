@@ -43,5 +43,35 @@ namespace Instacart_DataAccess.Service
             }
             
         }
+
+        public int DeactiveShop(Guid ShopId, bool IsActive)
+        {
+            using( var connection = _context.Createconnection())
+            {
+                DynamicParameters parameters = new DynamicParameters();
+                parameters.Add("@ShopId", ShopId);
+                parameters.Add("@IsActive", IsActive);
+                parameters.Add("@Action", "UPDATE");
+                parameters.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                connection.Execute("SP_UpsertShop", parameters, commandType: CommandType.StoredProcedure);
+                var responce = parameters.Get<int>("@Result");
+
+                return responce;
+            }
+        }
+
+        public int RemoveShop(Guid ShopId)
+        {
+           using(var connection = _context.Createconnection())
+            {
+                DynamicParameters parameters= new DynamicParameters();
+                parameters.Add("@ShopId", ShopId);
+                parameters.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                connection.Execute("SP_RemoveShop", parameters, commandType: CommandType.StoredProcedure);
+                var responce = parameters.Get<int>("@Result");
+
+                return responce;
+            }
+        }
     }
 }

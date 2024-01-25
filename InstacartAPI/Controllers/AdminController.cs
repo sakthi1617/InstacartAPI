@@ -18,7 +18,7 @@ namespace InstacartAPI.Controllers
 
         [HttpPost]
         [Route("AdminLogin")]
-        public async Task<IActionResult> AdminLogin(string username , string password)
+        public async Task<IActionResult> AdminLogin(string username, string password)
         {
             try
             {
@@ -41,13 +41,60 @@ namespace InstacartAPI.Controllers
         }
         [HttpPost]
         [Route("AddShop")]
-        public async Task<IActionResult> AddShop([FromQuery]AddShopVM model)
+        public async Task<IActionResult> AddShop([FromQuery] AddShopVM model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
                     var result = await _adminbll.AddShop(model);
+                    return Ok(result);
+                }
+                return BadRequest(ModelState);
+            }
+            catch (Exception ex)
+            {
+                ApiLog.Log("LogFile", ex.Message, ex.StackTrace, 10);
+                return BadRequest(new FailureResponse<object>
+                {
+                    Error = ex.Message,
+                    IsreponseSuccess = false
+                });
+            }
+        }
+        [HttpPatch]
+        [Route("DeactiveShop")]
+        public async Task<IActionResult> DeactiveShop(Guid ShopId, bool IsActive)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var result = _adminbll.DeactiveShop(ShopId, IsActive);
+                    return Ok(result);
+                }
+                return BadRequest(ModelState);
+            }
+            catch (Exception ex)
+            {
+                ApiLog.Log("LogFile", ex.Message, ex.StackTrace, 10);
+                return BadRequest(new FailureResponse<object>
+                {
+                    Error = ex.Message,
+                    IsreponseSuccess = false
+                });
+            }
+        }
+
+        [HttpDelete]
+        [Route("RemoveShop")]
+        public async Task<IActionResult> RemoveShop(Guid ShopId)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var result = _adminbll.RemoveShop(ShopId);
                     return Ok(result);
                 }
                 return BadRequest(ModelState);
