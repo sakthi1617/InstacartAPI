@@ -165,13 +165,9 @@ namespace Instacart_BusinessLogic.BusinessLogics
                 response.StatusCode = StatusCodes.Status400BadRequest;
                 return response;
             }
-            var userName = priciple.Identity.Name;
-            var emailClaim = priciple.FindFirst(ClaimTypes.Email).Value;
-            string userId = priciple.FindFirst("UserId").ToString().ToUpper();
-            string user = userId;
-            int n = 7;
-            user = user.Substring(n);
-            var currentToken = _authservice.GetToken(user);
+            var username = priciple.FindFirst(ClaimTypes.Email).Value;
+            string userId = priciple.FindFirst("UserId").Value;
+            var currentToken = _authservice.GetToken(userId);
 
             if (currentToken == null || currentToken.Ref_Token != RefToken || currentToken.ExpierAt <= DateTime.Now)
             {
@@ -180,7 +176,7 @@ namespace Instacart_BusinessLogic.BusinessLogics
                 response.StatusCode = StatusCodes.Status400BadRequest;
                 return response;
             }
-            var newtoken = Authenticateuser(emailClaim.ToString());
+            var newtoken = Authenticateuser(username.ToString());
             if (newtoken.Result.Success = false)
             {
                 response.Status = false;
@@ -209,9 +205,11 @@ namespace Instacart_BusinessLogic.BusinessLogics
             {
                 var tokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateAudience = false,
-                    ValidateIssuer = false,
+                    ValidateAudience = true,
+                    ValidateIssuer = true,
                     ValidateIssuerSigningKey = true,
+                    ValidAudience = _configuration["JwtSettings:Audience"],
+                    ValidIssuer = _configuration["JwtSettings:Issuer"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:Secret"])),
                     ValidateLifetime = true
                 };

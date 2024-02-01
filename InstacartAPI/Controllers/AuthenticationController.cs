@@ -2,7 +2,6 @@
 using Instacart_BusinessLogic.SupportModels;
 using Instacart_DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.CompilerServices;
 
 namespace InstacartAPI.Controllers
 {
