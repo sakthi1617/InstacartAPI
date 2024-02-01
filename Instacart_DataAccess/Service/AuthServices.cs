@@ -28,6 +28,7 @@ namespace Instacart_DataAccess.Service
 
         public int UserLogin(string Email, string password)
         {
+
             var getuser = GetUserDetails(Email);
             if (getuser != null)
             {
@@ -105,8 +106,8 @@ namespace Instacart_DataAccess.Service
                     parameters.Add("@UserID", model.UserId);
                     parameters.Add("@Ref_TokenID", model.RefTokenId);
                     parameters.Add("@Ref_Token", model.RefToken);
-                    parameters.Add("@CreatedOn", DateTime.UtcNow);
-                    parameters.Add("@ExpierAt", DateTime.UtcNow.AddDays(2));
+                    parameters.Add("@CreatedOn", DateTime.Now);
+                    parameters.Add("@ExpierAt", DateTime.Now.AddDays(2));
                     parameters.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
                     connection.Execute("SP_RefreshToken", parameters, commandType: CommandType.StoredProcedure);
                     int result = parameters.Get<int>("@Result");
@@ -136,7 +137,7 @@ namespace Instacart_DataAccess.Service
                         parameters.Add("@isActive", true);
                         parameters.Add("@isTimeout", false);
                         parameters.Add("@isExpired", false);
-                        parameters.Add("@Createdon", DateTime.UtcNow);
+                        parameters.Add("@Createdon", DateTime.Now);
                         parameters.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
                         connection.Execute("SP_Setotp", parameters, commandType: CommandType.StoredProcedure);
                         int result = parameters.Get<int>("@Result");
@@ -188,7 +189,45 @@ namespace Instacart_DataAccess.Service
                 connection.Execute("SP_ValidateOTP", parameters, commandType: CommandType.StoredProcedure);
                 int result = parameters.Get<int>("@Result");
                 return result;
+            }
+        }
 
+        public void Checktime()
+        {
+            using(var connection = _context.Createconnection())
+            {
+                var query = "Select * From Otp_tbl where isActive = 1 AND isTimeout = 0 AND isExpired =0";
+                var productList = connection.Query<UserOTP>(query, commandType: CommandType.Text).ToList();
+
+                foreach (var product in productList)
+                {
+                    if(product.CreatedOn.AddMinutes(2) <= DateTime.Now)
+                    {
+                        var updateQuery = $"UPDATE Otp_tbl SET isActive =0,isTimeout =1  WHERE Id ={product.Id}";
+                        connection.Execute(updateQuery);
+                    }
+                }
+            }
+        }
+
+        public  RefreshtokenModel1 GetToken(string userId)
+        {
+            using (var connection = _context.Createconnection())
+            {
+                try
+                {
+                    DynamicParameters parameters = new DynamicParameters();
+                    parameters.Add("@UserID", userId);
+                    RefreshtokenModel1 result = connection.Query<RefreshtokenModel1>("SP_GetTokenDetails", parameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
+                    return result; 
+                    //var query = $"SELECT * FROM Token_tbl Where UserID ='{userId}'";
+                    //var result = connection.Query<RefreshtokenModel>(query, commandType: CommandType.Text).FirstOrDefault();
+                    //return result;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
     }

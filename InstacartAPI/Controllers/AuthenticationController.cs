@@ -134,6 +134,20 @@ namespace InstacartAPI.Controllers
                 });
             }
         }
+
+
+        [HttpPost]
+        [Route("Refreshtoken")]
+
+        public async Task<IActionResult> Refreshtoken(TokenModel model)
+        {
+            if(ModelState.IsValid)
+            {
+                var result = await _auth.RefreshToken(model);
+                return Ok(result);
+            }
+            return BadRequest(ModelState);  
+        }
     }
 }
 

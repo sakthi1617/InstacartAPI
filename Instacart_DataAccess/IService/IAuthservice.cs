@@ -1,4 +1,5 @@
 ﻿using Instacart_DataAccess.Models;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +22,9 @@ namespace Instacart_DataAccess.IService
        public int validateOTP(string Email, string OTP);
 
         public int Updatepassword(string Email, string password);
+
+        public RefreshtokenModel1 GetToken(string userId);
+
+        public void Checktime();
     }
 }
