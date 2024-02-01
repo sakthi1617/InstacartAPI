@@ -17,5 +17,6 @@ namespace Instacart_BusinessLogic.IBusinessLogics
         public Task<ResponseStatus<string>> ValidateOTP(string Email, string OTP);
 
         public Task<ResponseStatus<string>> UpdatePassword(string Email, string password);
+        public Task<ResponseStatus<TokenModel>> RefreshToken(TokenModel model);
     }
 }

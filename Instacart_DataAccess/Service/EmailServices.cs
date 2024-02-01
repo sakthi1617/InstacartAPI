@@ -57,7 +57,6 @@ namespace Instacart_DataAccess.Service
             catch (Exception ex)
             {
                 throw ex;
-
             }
             finally 
             {
