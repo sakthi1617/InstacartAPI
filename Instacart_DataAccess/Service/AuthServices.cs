@@ -2,15 +2,8 @@
 using Instacart_DataAccess.Data;
 using Instacart_DataAccess.IService;
 using Instacart_DataAccess.Models;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Instacart_DataAccess.Service
 {
@@ -55,7 +48,6 @@ namespace Instacart_DataAccess.Service
                     Guid guid= Guid.NewGuid();
                     model.UserId = guid;
 
-                    // convert iform file to byte[]
                     var userimage = model.UserImage;
                     byte[] data;
                     using (MemoryStream ms = new MemoryStream()) {
@@ -141,7 +133,6 @@ namespace Instacart_DataAccess.Service
                         parameters.Add("@Result", dbType: DbType.Int32, direction: ParameterDirection.Output);
                         connection.Execute("SP_Setotp", parameters, commandType: CommandType.StoredProcedure);
                         int result = parameters.Get<int>("@Result");
-                        // Send otp to user email
                         var sendedMessage = "Your One Time password(OTP) is" + OTP + ". Your otp is valid for 2 minutes";
                         var message = new Message(new string[] { Email }, "OTP Verification", sendedMessage.ToString(), null);
                         _emailservice.sendEmail(message);
@@ -215,14 +206,10 @@ namespace Instacart_DataAccess.Service
             using (var connection = _context.Createconnection())
             {
                 try
-                {
-                    DynamicParameters parameters = new DynamicParameters();
-                    parameters.Add("@UserID", userId);
-                    RefreshtokenModel1 result = connection.Query<RefreshtokenModel1>("SP_GetTokenDetails", parameters, commandType: CommandType.StoredProcedure).FirstOrDefault();
-                    return result; 
-                    //var query = $"SELECT * FROM Token_tbl Where UserID ='{userId}'";
-                    //var result = connection.Query<RefreshtokenModel>(query, commandType: CommandType.Text).FirstOrDefault();
-                    //return result;
+                {                    
+                    var query = $"SELECT * FROM Token_tbl Where UserID ='{userId}'";
+                    var result = connection.Query<RefreshtokenModel1>(query, commandType: CommandType.Text).FirstOrDefault();
+                    return result;
                 }
                 catch (Exception ex)
                 {
