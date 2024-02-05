@@ -1,4 +1,5 @@
 ﻿using Instacart_BusinessLogic.IBusinessLogics;
+using Instacart_BusinessLogic.SupportModels;
 using Instacart_BusinessLogic.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,25 +18,96 @@ namespace InstacartAPI.Controllers
 
         [HttpPost]
         [Route("AdminLogin")]
-        public async Task<IActionResult> AdminLogin(string username , string password)
+        public async Task<IActionResult> AdminLogin(string username, string password)
         {
-            if(ModelState.IsValid)
+            try
             {
-                var result = await _adminbll.AdminLogin(username, password);
-                return Ok(result);
+                if (ModelState.IsValid)
+                {
+                    var result = await _adminbll.AdminLogin(username, password);
+                    return Ok(result);
+                }
+                return BadRequest(ModelState);
             }
-            return BadRequest();
+            catch (Exception ex)
+            {
+                ApiLog.Log("LogFile", ex.Message, ex.StackTrace, 10);
+                return BadRequest(new FailureResponse<object>
+                {
+                    Error = ex.Message,
+                    IsreponseSuccess = false
+                });
+            }
         }
         [HttpPost]
         [Route("AddShop")]
-        public async Task<IActionResult> AddShop([FromQuery]AddShopVM model)
+        public async Task<IActionResult> AddShop([FromQuery] AddShopVM model)
         {
-            if(ModelState.IsValid)
+            try
             {
-                var result = await _adminbll.AddShop(model);
-                return Ok(result);
+                if (ModelState.IsValid)
+                {
+                    var result = await _adminbll.AddShop(model);
+                    return Ok(result);
+                }
+                return BadRequest(ModelState);
             }
-            return BadRequest();
+            catch (Exception ex)
+            {
+                ApiLog.Log("LogFile", ex.Message, ex.StackTrace, 10);
+                return BadRequest(new FailureResponse<object>
+                {
+                    Error = ex.Message,
+                    IsreponseSuccess = false
+                });
+            }
+        }
+        [HttpPatch]
+        [Route("DeactiveShop")]
+        public async Task<IActionResult> DeactiveShop(Guid ShopId, bool IsActive)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var result = _adminbll.DeactiveShop(ShopId, IsActive);
+                    return Ok(result);
+                }
+                return BadRequest(ModelState);
+            }
+            catch (Exception ex)
+            {
+                ApiLog.Log("LogFile", ex.Message, ex.StackTrace, 10);
+                return BadRequest(new FailureResponse<object>
+                {
+                    Error = ex.Message,
+                    IsreponseSuccess = false
+                });
+            }
+        }
+
+        [HttpDelete]
+        [Route("RemoveShop")]
+        public async Task<IActionResult> RemoveShop(Guid ShopId)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var result = _adminbll.RemoveShop(ShopId);
+                    return Ok(result);
+                }
+                return BadRequest(ModelState);
+            }
+            catch (Exception ex)
+            {
+                ApiLog.Log("LogFile", ex.Message, ex.StackTrace, 10);
+                return BadRequest(new FailureResponse<object>
+                {
+                    Error = ex.Message,
+                    IsreponseSuccess = false
+                });
+            }
         }
     }
 }

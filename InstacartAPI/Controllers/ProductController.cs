@@ -1,8 +1,6 @@
 ﻿using Instacart_BusinessLogic.IBusinessLogics;
 using Instacart_BusinessLogic.SupportModels;
-using Instacart_DataAccess.IService;
 using Instacart_DataAccess.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InstacartAPI.Controllers
@@ -22,55 +20,100 @@ namespace InstacartAPI.Controllers
         [Route("CreateProduct")]
         public async Task<IActionResult> CreateProduct(Product model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var result = await productBLL.CreateProduct(model);
-                return Ok(result);
+                if (ModelState.IsValid)
+                {
+                    var result = await productBLL.CreateProduct(model);
+                    return Ok(result);
+                }
+                return BadRequest(ModelState);
             }
-            return BadRequest(ModelState);
-
+            catch (Exception ex)
+            {
+                ApiLog.Log("LogFile", ex.Message, ex.StackTrace, 10);
+                return BadRequest(new FailureResponse<object>
+                {
+                    Error = ex.Message,
+                    IsreponseSuccess = false
+                });
+            }
         }
 
         [HttpPost]
         [Route("UpdateProduct")]
         public async Task<IActionResult> UpdateProduct(Guid productid, Product model)
         {
-
-            if (ModelState.IsValid)
+            try
             {
-                var updatedData = await productBLL.UpdateProducts(productid, model);
-                return Ok(updatedData);
+                if (ModelState.IsValid)
+                {
+                    var updatedData = await productBLL.UpdateProducts(productid, model);
+                    return Ok(updatedData);
+                }
+                return BadRequest(ModelState);
             }
-            return BadRequest(ModelState);
-
+            catch (Exception ex)
+            {
+                ApiLog.Log("LogFile", ex.Message, ex.StackTrace, 10);
+                return BadRequest(new FailureResponse<object>
+                {
+                    Error = ex.Message,
+                    IsreponseSuccess = false
+                });
+            }
         }
 
         [HttpDelete]
         [Route("DeleteProduct/{productId}")]
         public async Task<IActionResult> DeleteProduct(Guid productId)
         {
-            var result = await productBLL.DeleteProduct(productId);
-
-            if (result.Status)
+            try
             {
-                return Ok(result);
-            }
-            return BadRequest();
+                var result = await productBLL.DeleteProduct(productId);
 
+                if (result.Status)
+                {
+                    return Ok(result);
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ApiLog.Log("LogFile", ex.Message, ex.StackTrace, 10);
+                return BadRequest(new FailureResponse<object>
+                {
+                    Error = ex.Message,
+                    IsreponseSuccess = false
+                });
+            }
         }
 
         [HttpGet]
         [Route("GetProductByID")]
         public async Task<IActionResult> GetProductByID(Guid productid)
         {
-            var data = await productBLL.GetProductByID(productid);
-
-            if (data != null)
+            try
             {
-                return Ok(data);
-            }
+                var data = await productBLL.GetProductByID(productid);
 
-            return BadRequest();
+                if (data != null)
+                {
+                    return Ok(data);
+                }
+
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                ApiLog.Log("LogFile", ex.Message, ex.StackTrace, 10);
+                return BadRequest(new FailureResponse<object>
+                {
+                    Error = ex.Message,
+                    IsreponseSuccess = false
+                });
+            }
+           
 
         }
 
@@ -78,14 +121,26 @@ namespace InstacartAPI.Controllers
         [Route("GetAllProduct")]
         public async Task<IActionResult> GetAllProduct()
         {
-
-            var data = await productBLL.GetProducts();
-            if (data != null)
+            try
             {
-                return Ok(data);
-            }
-            return BadRequest();
+                var data = await productBLL.GetProducts();
+                if (data != null)
+                {
+                    return Ok(data);
+                }
+                return BadRequest();
 
+            }
+            catch (Exception ex)
+            {
+                ApiLog.Log("LogFile", ex.Message, ex.StackTrace, 10);
+                return BadRequest(new FailureResponse<object>
+                {
+                    Error = ex.Message,
+                    IsreponseSuccess = false
+                });
+            }
+           
 
         }
     }

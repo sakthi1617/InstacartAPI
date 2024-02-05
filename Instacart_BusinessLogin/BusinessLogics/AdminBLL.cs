@@ -96,5 +96,56 @@ namespace Instacart_BusinessLogic.BusinessLogics
             }
             return response;
         }
+        public async Task<ResponseStatus<Guid>> DeactiveShop(Guid ShopId, bool IsActive)
+        {
+            ResponseStatus<Guid> response = new ResponseStatus<Guid>();
+            var data = _adminservice.DeactiveShop(ShopId, IsActive);
+            switch (data)
+            {
+                case 0:
+                    response.Status = false;
+                    response.StatusCode = StatusCodes.Status404NotFound;
+                    response.Message = "Shop Not Found";
+                    break;
+                case 1:
+                    response.Status = true;
+                    response.StatusCode = StatusCodes.Status200OK;
+                    response.Message = "Shop Status Update successfully";
+                    break;
+                case -1:
+                    response.Status = false;
+                    response.StatusCode = StatusCodes.Status400BadRequest;
+                    response.Message = "Somthing went wrong please try again later...";
+                    break;
+            }
+            return response;
+        }
+
+        public async Task<ResponseStatus<Guid>> RemoveShop(Guid ShopId)
+        {
+            ResponseStatus<Guid> response = new ResponseStatus<Guid>();
+            var data = _adminservice.RemoveShop(ShopId);
+            switch (data)
+            {
+                case 0:
+                    response.Status = false;
+                    response.StatusCode = StatusCodes.Status404NotFound;
+                    response.Message = "Shop Not Found";
+                    break;
+                case 1:
+                    response.Status = true;
+                    response.StatusCode = StatusCodes.Status200OK;
+                    response.Message = "Shop Deleted Successfully";
+                    break;
+                case -1:
+                    response.Status = false;
+                    response.StatusCode = StatusCodes.Status400BadRequest;
+                    response.Message = "Somthing went wrong please try again later...";
+                    break;
+            }
+            return response;
+        }
+
+
     }
 }
