@@ -1,5 +1,6 @@
 ﻿using Instacart_BusinessLogic.IBusinessLogics;
 using Instacart_BusinessLogic.SupportModels;
+using Instacart_BusinessLogic.ViewModels;
 using Instacart_DataAccess.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,13 +41,13 @@ namespace InstacartAPI.Controllers
 
         [HttpPost]
         [Route("UserLogin")]
-        public async Task<IActionResult> UserLogin(string Email, string password)
+        public async Task<IActionResult> UserLogin(LoginVM model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var result = await _auth.UserLogin(Email, password);
+                    var result = await _auth.UserLogin(model.username, model.password);
                     return Ok(result);
                 }
                 return BadRequest(ModelState);
